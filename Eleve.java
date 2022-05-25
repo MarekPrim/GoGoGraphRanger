@@ -1,9 +1,9 @@
-public class Eleve {
+package graphRanger;
 
-	private String nom;
-	
+public class Eleve extends Participant {
+
 	public Eleve(String nom) {
-		this.nom = nom;
+		super(nom, 1);
 	}
 	
 }

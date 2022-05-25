@@ -1,3 +1,5 @@
+package graphRanger;
+
 public class Preference {
 
 	private int numeroPreferenceEtudiant;

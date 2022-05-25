@@ -1,11 +1,9 @@
-public class Ecole {
+package graphRanger;
 
-	private String nom;
-	private int capacite;
-	
+public class Ecole extends Participant {
+
 	public Ecole(String nom, int capacite) {
-		this.nom = nom;
-		this.capacite = capacite;
+		super(nom, capacite);
 	}
-	
+
 }
