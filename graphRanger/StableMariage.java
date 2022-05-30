@@ -1,102 +1,204 @@
 package graphRanger;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class StableMariage {
-	
-	public static List<Participant> rejetes = new ArrayList<Participant>();
-	
-	public void creerPreferences(List<? extends Participant> demandeurs, List<? extends Participant> preferences) {
-		for (Participant e : demandeurs) {
-			List<Integer> ordrePreferences = new ArrayList<>();
-		    for (int k = 0; k < preferences.size(); k++) {
-		        ordrePreferences.add(k);
-		    }
-		    Collections.shuffle(ordrePreferences);
-		    for (Integer preference : ordrePreferences) {
-		    	e.ajouterPreference(preferences.get(preference));
-		    }
+
+	private List<Ecole> ecoles;
+	private List<Eleve> eleves;
+
+	private List<Participant> rejetes;
+
+	public void associerDemandeurDemande(List<? extends Participant> rejetes, List<? extends Participant> demandes) {
+		for(Participant rejete : this.rejetes){
+			rejete.demander((List<Participant>) demandes);
 		}
 	}
-	
-	public void associerDemandeurDemande(List<? extends Participant> demandeurs, List<? extends Participant> demandes, int nbTours) {
-		for(Participant demandeur : demandeurs){
-			demandeur.demander((ArrayList<Participant>) demandes, nbTours);
-		}
-	}
-	
+
 	public void trierDemandeurs(List<? extends Participant> demandes) {
+		this.rejetes = new ArrayList<Participant>();
 		for (Participant demande : demandes) {
-			demande.trierDemandeurs();
+			demande.trierDemandeurs(this);
 		}
 	}
 	
-	public void resoudre(List<? extends Participant> demandeurs, List<? extends Participant> demandes) {
+	public void ajouterRejetes(Participant demandeur) {
+		this.rejetes.add(demandeur);
+	}
+
+	public void resoudre(boolean elevesDemandent) {
+
+		List<? extends Participant> demandeurs;
+		List<? extends Participant> demandes;
 		
-		this.creerPreferences(demandeurs, demandes);
-		this.creerPreferences(demandes, demandeurs);
-		
-		int nbTours = 0;
-		
-		
-		do {
+		if (elevesDemandent) {
+			demandeurs = this.eleves;
+			demandes = this.ecoles;
+		} else {
+			demandeurs = this.ecoles;
+			demandes = this.eleves;
+		}
+
+		this.rejetes = (List<Participant>) demandeurs;
+		int nbTours = 1;
+		while (!this.rejetes.isEmpty()) {
 			
-			rejetes = new ArrayList<>();
-			
-			this.associerDemandeurDemande(demandeurs, demandes, nbTours);
+			this.associerDemandeurDemande(this.rejetes, demandes);
+			this.afficherResultats(demandes, demandeurs, nbTours++);
 			this.trierDemandeurs(demandes);
-			
-			System.out.println(" REJETEES (" + rejetes.size() + ")");
-			for (Participant p : rejetes) {
-				System.out.println(p.getNom());
+
+		}
+		
+	}
+
+	private void afficherResultats(List<? extends Participant> demandes, List<? extends Participant> demandeurs,
+			int nbTours) {
+		String affichage = "\nTour n° " + nbTours + "\n\n";
+		for (Participant demande : demandes) {
+			affichage += demande.getNom() + "\n";
+			for (Participant demandeur : demande.getDemandeurs()) {
+				affichage += demandeur.getNom();
+				if (demande.getDemandeurs().get(demande.getDemandeurs().size()-1) != demandeur) {
+					affichage += " - ";
+				}
 			}
-			
-			
-			
-			nbTours++;
-			
-		} while(!rejetes.isEmpty());
+			affichage += "\n\n";
+		}
+		
+		System.out.println(affichage);
 	}
 
-	public static void main(String[] args) {
-		
-		StableMariage s = new StableMariage();
-		
-		
-		ArrayList<Ecole> ecoles = new ArrayList<>();
-		ArrayList<Eleve> eleves = new ArrayList<>();
-		
-		ecoles.add(new Ecole("Enseeiht", 6));
-		ecoles.add(new Ecole("Insa", 8));
-		ecoles.add(new Ecole("A7", 6));
-		
-		eleves.add(new Eleve("Kylian"));
-		eleves.add(new Eleve("Keke"));
-		eleves.add(new Eleve("Johan"));
-		eleves.add(new Eleve("Jordan"));
-		eleves.add(new Eleve("Mathias"));
-		eleves.add(new Eleve("Christophe"));
-		eleves.add(new Eleve("Jonathan"));
-		eleves.add(new Eleve("Julien"));
-		eleves.add(new Eleve("Emrick"));
-		eleves.add(new Eleve("Damien"));
-		
-		eleves.add(new Eleve("A"));
-		eleves.add(new Eleve("B"));
-		eleves.add(new Eleve("C"));
-		eleves.add(new Eleve("D"));
-		eleves.add(new Eleve("E"));
-		eleves.add(new Eleve("F"));
-		eleves.add(new Eleve("G"));
-		eleves.add(new Eleve("H"));
-		eleves.add(new Eleve("I"));
-		eleves.add(new Eleve("J"));
+	public void afficherTableau() {
 
-		s.resoudre(ecoles, eleves);
-		 	 
+		int nbMaxNameLengthOfEcoles = this.getMaxLength(this.ecoles);
+		int nbMaxNameLengthOfEleves = this.getMaxLength(this.eleves);
+
+		String affichage = "\nVoici le tableau des préférences\n\n";
+
+		for (int i = 0; i < nbMaxNameLengthOfEleves; i++) {
+			affichage += " ";
+		}
+
+		for (Participant ecole : this.ecoles) {
+			affichage += String.format("%" + nbMaxNameLengthOfEcoles + "s", ecole) + " ";
+		}
+
+		affichage += "\n";
+
+		String preference;
+
+		for (Participant eleve : this.eleves) {
+			affichage += "\n" + String.format("%" + nbMaxNameLengthOfEleves + "s", eleve);
+
+			for (Participant ecole : this.ecoles) {
+				preference = "(" + (eleve.getPreferences().indexOf(ecole) + 1) + ","
+						+ (ecole.getPreferences().indexOf(eleve) + 1) + ")";
+				affichage += String.format("%" + nbMaxNameLengthOfEcoles + "s", preference) + " ";
+			}
+			affichage += "\n";
+		}
+
+		System.out.println(affichage);
 	}
+
+	public void initialiser() throws FileNotFoundException, IOException, ParseException {
+		
+		this.ecoles = new ArrayList<>();
+		this.eleves = new ArrayList<>();
+
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse(new FileReader("preferences.json"));
+		JSONObject jsonObject = (JSONObject) obj;
+
+		/**
+		 * Ajout des élèves
+		 */
+		JSONObject jsonStudents = (JSONObject) jsonObject.get("students");
+
+		Set<Map.Entry<String, List<String>>> students = jsonStudents.entrySet();
+
+		for (Entry<String, List<String>> entry : students) {
+			this.eleves.add(new Eleve(entry.getKey()));
+		}
+
+		/**
+		 * Ajout des écoles
+		 */
+		JSONObject jsonSchools = (JSONObject) jsonObject.get("schools");
+
+		Set<Map.Entry<String, Object>> schools = jsonSchools.entrySet();
+
+		long capacite;
+		
+		for (Entry<String, Object> entry : schools) {
+			capacite = (long) ((HashMap) entry.getValue()).get("capacity");
+			this.ecoles.add(new Ecole(entry.getKey(), (int) capacite));
+		}
+		
+		/**
+		 * Ajout préférences écoles des élèves
+		 */
+		List<String> ecolesToString;
+		int i = 0;
+		for (Entry<String, List<String>> entry : students) {
+			ecolesToString = entry.getValue();
+			for (String s : ecolesToString) {
+				for (Ecole ecole : this.ecoles) {
+					if (s.equals(ecole.getNom())) {
+						this.eleves.get(i).ajouterPreference(ecole);
+					}
+				}
+			}
+			i++;
+		}
+		
+		/**
+		 * Ajout préférences élèves des écoles
+		 */
+		List<String> elevesToString;
+		i = 0;
+		for (Entry<String, Object> entry : schools) {
+			elevesToString = (List<String>) ((HashMap) entry.getValue()).get("preferences");
+			for (String s : elevesToString) {
+				for (Eleve eleve : this.eleves) {
+					if (s.equals(eleve.getNom())) {
+						this.ecoles.get(i).ajouterPreference(eleve);
+					}
+				}
+			}
+			i++;
+		}
+		
+	}
+	
+	private int getMaxLength(List<? extends Participant> participants) {
+		int maxLength = 0;
+		String name;
+
+		for (Participant p : participants) {
+			name = p.toString();
+			if (name.length() > maxLength) {
+				maxLength = name.length();
+			}
+		}
+
+		return maxLength;
+	}
+
 
 }

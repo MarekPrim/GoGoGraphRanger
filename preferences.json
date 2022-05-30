@@ -1,0 +1,34 @@
+{
+    "students": {
+        "Jean": ["N7", "A7", "INSA"],
+        "Bob": ["A7", "INSA", "N7"],
+        "Arthur": ["N7", "A7", "INSA"],
+        "Roki": ["INSA", "A7", "N7"],
+        "Zhana": ["INSA", "N7", "A7"],
+        "Paul": ["A7", "INSA", "N7"],
+        "Laurant": ["N7", "A7", "INSA"],
+        "Marc": ["A7", "N7", "INSA"],
+        "Cesar": ["N7", "A7", "INSA"],
+        "Aurel": ["INSA", "N7", "A7"],
+        "Neron": ["N7", "A7", "INSA"],
+        "Alexandre": ["N7", "A7", "INSA"],
+        "Khan": ["N7", "A7", "INSA"],
+        "Roomba": ["A7", "N7", "INSA"],
+        "Mike": ["A7", "INSA", "N7"],
+        "Orange": ["INSA", "A7", "N7"]
+    },
+    "schools": {
+        "N7": {
+            "capacity": 6,
+            "preferences": ["Jean", "Bob", "Arthur", "Roki", "Zhana", "Marc", "Laurant", "Paul", "Cesar", "Aurel", "Neron", "Khan", "Alexandre", "Roomba", "Orange", "Mike"]
+        },
+        "INSA": {
+            "capacity": 6,
+            "preferences": ["Bob", "Jean", "Zhana", "Roki", "Arthur", "Marc", "Laurant", "Cesar", "Paul", "Aurel", "Roomba", "Amexandre", "Khan", "Neron", "Mike", "Orange"]
+        },
+        "A7": {
+            "capacity": 4,
+            "preferences": ["Arthur", "Bob", "Jean", "Marc", "Zhana", "Roki", "Paul", "Laurant", "Cesar", "Aurel", "Khan", "Neron", "Alexandre", "Orange", "Roomba", "Mike"]
+        }
+    }
+}

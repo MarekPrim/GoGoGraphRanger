@@ -1,6 +1,6 @@
 package graphRanger;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Eleve extends Participant {
 
@@ -9,13 +9,12 @@ public class Eleve extends Participant {
 	}
 
 	@Override
-	public void demander(ArrayList<Participant> demandes, int nbTours) {
+	public void demander(List<Participant> demandes) {
 		for (Participant demande : demandes) {
-				if (this.getPreferences().get(0) == demande) {
-					demande.ajouterDemandeur(this);
-					System.out.println(this.getNom() + " a choisi " + demande.getNom() + " au bout de " + nbTours + " tours");
-				}
+			if (this.getPreferences().get(0) == demande) {
+				demande.ajouterDemandeur(this);
+			}
 		}
 	}
-	
+
 }

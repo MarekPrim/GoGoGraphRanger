@@ -1,18 +1,15 @@
 package graphRanger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class Participant {
 
 	private String nom;
-	private int capacite;
+	protected int capacite;
 	
 	private List<Participant> demandeurs;
 	private List<Participant> preferences;
-	
-	
 	
 	public Participant(String nom, int capacite) {
 		this.nom = nom;
@@ -21,9 +18,12 @@ public abstract class Participant {
 		this.preferences = new ArrayList<>();
 	}
 	
+	public abstract void demander(List<Participant> demandes);
+	
 	public void ajouterDemandeur(Participant p) {
-		if (!this.demandeurs.contains(p))
+		if (!this.demandeurs.contains(p)) {
 			this.demandeurs.add(p);
+		}
 	}
 	
 	public void supprimerDemandeur(Participant p) {
@@ -38,11 +38,7 @@ public abstract class Participant {
 		this.preferences.remove(p);
 	}
 
-	public int getCapacite(){
-		return this.capacite;
-	}
-
-	public void trierDemandeurs() {
+	public void trierDemandeurs(StableMariage s) {
 		
 		List<Participant> choisis = new ArrayList<>();
 		int i = 0;
@@ -55,7 +51,7 @@ public abstract class Participant {
 		
 		for (Participant demandeur : this.demandeurs) {
 			if (!choisis.contains(demandeur)) {
-				StableMariage.rejetes.add(demandeur);
+				s.ajouterRejetes(demandeur);
 				demandeur.supprimerPreference(this);
 			}
 		}
@@ -68,14 +64,17 @@ public abstract class Participant {
 	}
 
 	public List<Participant> getDemandeurs() {
-		return demandeurs;
+		return this.demandeurs;
 	}
 
 	public List<Participant> getPreferences() {
-		return preferences;
+		return this.preferences;
 	}
 	
-	
+	protected int getCapacite() {
+		return this.capacite;
+	}
+
 	public void afficherDemandeurs() {
 		System.out.println(this.nom);
 		for (Participant p : this.demandeurs) {
@@ -84,27 +83,8 @@ public abstract class Participant {
 		System.out.println("\n");
 	}
 
-	public abstract void demander(ArrayList<Participant> demandes, int nbTours);
-
 	@Override
 	public String toString() {
-		String retour = "";
-		retour += "Nom : " + this.nom + "\nPreferences : ";
-		
-		for (Participant p  : this.preferences) {
-			retour += p.nom + " - ";
-		}
-		
-		retour += "\nDemandeurs : ";
-		
-		for (Participant p  : this.demandeurs) {
-			retour += p.nom + " - ";
-		}
-		
-		retour += "\n";
-		
-		return retour;
+		return this.nom;
 	}
-	
-	
 }
