@@ -23,13 +23,8 @@ public class StableMariage {
 	}
 	
 	public void associerDemandeurDemande(List<? extends Participant> demandeurs, List<? extends Participant> demandes, int nbTours) {
-		for (Participant demande : demandes) {
-			for (Participant demandeur : demandeurs) {
-				if (demandeur.getPreferences().get(0) == demande) {
-					demande.ajouterDemandeur(demandeur);
-					System.out.println(demandeur.getNom() + " a choisi " + demande.getNom() + " au bout de " + nbTours + " tours");
-				}
-			}
+		for(Participant demandeur : demandeurs){
+			demandeur.demander((ArrayList<Participant>) demandes, nbTours);
 		}
 	}
 	
@@ -51,31 +46,15 @@ public class StableMariage {
 			
 			rejetes = new ArrayList<>();
 			
-//			for (Eleve e : eleves) {
-//				System.out.println(e);
-//			}
-//			
-//			for (Ecole ecole : ecoles) {
-//				System.out.println(ecole);
-//			}
-			
 			this.associerDemandeurDemande(demandeurs, demandes, nbTours);
 			this.trierDemandeurs(demandes);
-			
-			
-//			
-//			for (Ecole ecole : ecoles) {
-//				ecole.afficherDemandeurs();
-//			}
 			
 			System.out.println(" REJETEES (" + rejetes.size() + ")");
 			for (Participant p : rejetes) {
 				System.out.println(p.getNom());
 			}
 			
-//			for (Eleve e : eleves) {
-//				System.out.println(e);
-//			}
+			
 			
 			nbTours++;
 			
@@ -87,8 +66,8 @@ public class StableMariage {
 		StableMariage s = new StableMariage();
 		
 		
-		List<Ecole> ecoles = new ArrayList<>();
-		List<Eleve> eleves = new ArrayList<>();
+		ArrayList<Ecole> ecoles = new ArrayList<>();
+		ArrayList<Eleve> eleves = new ArrayList<>();
 		
 		ecoles.add(new Ecole("Enseeiht", 6));
 		ecoles.add(new Ecole("Insa", 8));

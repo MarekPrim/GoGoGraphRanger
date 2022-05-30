@@ -38,6 +38,10 @@ public abstract class Participant {
 		this.preferences.remove(p);
 	}
 
+	public int getCapacite(){
+		return this.capacite;
+	}
+
 	public void trierDemandeurs() {
 		
 		List<Participant> choisis = new ArrayList<>();
@@ -79,6 +83,8 @@ public abstract class Participant {
 		}
 		System.out.println("\n");
 	}
+
+	public abstract void demander(ArrayList<Participant> demandes, int nbTours);
 
 	@Override
 	public String toString() {
