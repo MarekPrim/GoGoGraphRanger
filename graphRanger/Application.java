@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.naming.ConfigurationException;
+
 import org.json.simple.parser.ParseException;
 
 public class Application {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
+	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, ConfigurationException {
 		StableMariage s = new StableMariage();
 		
 		Scanner sc = new Scanner(System.in);
@@ -30,6 +32,8 @@ public class Application {
 			}
 			
 		} while (choix == 1 || choix == 2);
+		sc.close();
+		System.exit(0);
 	}
 
 }
