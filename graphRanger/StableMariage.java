@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.naming.ConfigurationException;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -63,6 +65,7 @@ public class StableMariage {
 			this.trierDemandeurs(demandes);
 
 		}
+		System.out.println("Fin de l'association en " + nbTours + " tours");
 		
 	}
 
@@ -116,7 +119,7 @@ public class StableMariage {
 		System.out.println(affichage);
 	}
 
-	public void initialiser() throws FileNotFoundException, IOException, ParseException {
+	public void initialiser() throws FileNotFoundException, IOException, ParseException, ConfigurationException {
 		
 		this.ecoles = new ArrayList<>();
 		this.eleves = new ArrayList<>();
@@ -148,6 +151,14 @@ public class StableMariage {
 		for (Entry<String, Object> entry : schools) {
 			capacite = (long) ((HashMap) entry.getValue()).get("capacity");
 			this.ecoles.add(new Ecole(entry.getKey(), (int) capacite));
+		}
+		
+		int sum = 0;
+		for(Ecole ecole : this.ecoles) {
+			sum+=ecole.getCapacite();
+		}
+		if(sum != this.eleves.size()) {
+			throw new ConfigurationException("La capacité totale des écoles n'est pas égale au nombre d'élèves");
 		}
 		
 		/**
@@ -183,7 +194,9 @@ public class StableMariage {
 			}
 			i++;
 		}
-		
+		//Garbage collector cheat
+		jsonObject = null;
+		parser = null;
 	}
 	
 	private int getMaxLength(List<? extends Participant> participants) {
