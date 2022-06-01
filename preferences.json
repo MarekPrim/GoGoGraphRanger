@@ -23,8 +23,8 @@
             "preferences": ["Jean", "Bob", "Arthur", "Roki", "Zhana", "Marc", "Laurant", "Paul", "Cesar", "Aurel", "Neron", "Khan", "Alexandre", "Roomba", "Orange", "Mike"]
         },
         "INSA": {
-            "capacity": 6,
-            "preferences": ["Bob", "Jean", "Zhana", "Roki", "Arthur", "Marc", "Laurant", "Cesar", "Paul", "Aurel", "Roomba", "Amexandre", "Khan", "Neron", "Mike", "Orange"]
+            "capacity": 4,
+            "preferences": ["Bob", "Jean", "Zhana", "Roki", "Arthur", "Marc", "Laurant", "Cesar", "Paul", "Aurel", "Roomba", "Alexandre", "Khan", "Neron", "Mike", "Orange"]
         },
         "A7": {
             "capacity": 4,

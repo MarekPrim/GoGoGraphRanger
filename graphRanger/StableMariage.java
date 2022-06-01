@@ -25,6 +25,7 @@ public class StableMariage {
 	private List<Eleve> eleves;
 
 	private List<Participant> rejetes;
+	static List<Participant> defRejetes = new ArrayList<Participant>();
 
 	public void associerDemandeurDemande(List<? extends Participant> rejetes, List<? extends Participant> demandes) {
 		for(Participant rejete : this.rejetes){
@@ -58,14 +59,22 @@ public class StableMariage {
 
 		this.rejetes = (List<Participant>) demandeurs;
 		int nbTours = 1;
-		while (!this.rejetes.isEmpty()) {
+		
+			while (!this.rejetes.isEmpty()) {
+				this.associerDemandeurDemande(this.rejetes, demandes);
+				this.afficherResultats(demandes, demandeurs, nbTours++);
+				this.trierDemandeurs(demandes);
+			}
+			if(!StableMariage.defRejetes.isEmpty()) {
+				System.out.println("Some students won't have a school due to lack of capacity");
+				for(Participant p : StableMariage.defRejetes) {
+					System.out.println(p);
+				}
+			}
 			
-			this.associerDemandeurDemande(this.rejetes, demandes);
-			this.afficherResultats(demandes, demandeurs, nbTours++);
-			this.trierDemandeurs(demandes);
-
-		}
-		System.out.println("Fin de l'association en " + nbTours + " tours");
+		
+		
+		System.out.println("Fin de l'association en " + (nbTours-1) + " tours\n\n");
 		
 	}
 
@@ -153,13 +162,13 @@ public class StableMariage {
 			this.ecoles.add(new Ecole(entry.getKey(), (int) capacite));
 		}
 		
-		int sum = 0;
-		for(Ecole ecole : this.ecoles) {
-			sum+=ecole.getCapacite();
-		}
-		if(sum != this.eleves.size()) {
-			throw new ConfigurationException("La capacité totale des écoles n'est pas égale au nombre d'élèves");
-		}
+//		int sum = 0;
+//		for(Ecole ecole : this.ecoles) {
+//			sum+=ecole.getCapacite();
+//		}
+//		if(sum < this.eleves.size()) {
+//			throw new ConfigurationException("La capacité totale des écoles n'est pas égale au nombre d'élèves");
+//		}
 		
 		/**
 		 * Ajout préférences écoles des élèves

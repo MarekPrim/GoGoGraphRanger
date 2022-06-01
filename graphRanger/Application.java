@@ -15,7 +15,6 @@ public class Application {
 		
 		Scanner sc = new Scanner(System.in);
 		int choix;
-		boolean sens;
 		
 		do {
 			System.out.println("Faites votre choix");

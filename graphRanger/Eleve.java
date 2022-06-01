@@ -10,6 +10,10 @@ public class Eleve extends Participant {
 
 	@Override
 	public void demander(List<Participant> demandes) {
+		if(this.getPreferences().size()==0) {
+			StableMariage.defRejetes.add(this);
+			return;
+		}
 		for (Participant demande : demandes) {
 			if (this.getPreferences().get(0) == demande) {
 				demande.ajouterDemandeur(this);
